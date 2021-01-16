@@ -1,20 +1,23 @@
 package com.example.rabbitmqexample;
 
 import java.util.concurrent.CountDownLatch;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Receiver {
+    private final static Logger LOGGER_ = LogManager.getLogger(MessageController.class);
 
-    private CountDownLatch latch = new CountDownLatch(1);
 
-    public void receiveMessage(String message) {
-        System.out.println("Received " + message );
-        latch.countDown();
+    @RabbitListener(queues = "spring-boot-queue")
+    public void receiveMessage(OtpMessage otpMessage) throws InterruptedException {
+        Thread.sleep(20000);
+        LOGGER_.info("Received message asynchronously ........{}", otpMessage.toString());
+
     }
 
-    public CountDownLatch getLatch() {
-        return latch;
-    }
 
 }
